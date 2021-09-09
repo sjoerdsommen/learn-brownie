@@ -12,10 +12,10 @@ networks:
   default: development
   development:
     cmd_settings:
-      mnemonic: brownie
-      default_balance: 100000000000000000000
-      unlock: <ACCOUNT ADDRESS HERE> # optionally add saved brownie account to Ganache
-      # (requires explicit transfer of eth to accounts[-1]) 
+      mnemonic: industry uniform win combine ten hurry truth pink crater escape grain twist
+      default_balance: 100
+      # unlock: <ACCOUNT ADDRESS HERE> # optionally add saved brownie account to Ganache
+      # # (requires explicit transfer of eth to accounts[-1]) 
 
     update_interval: 60
     verify: False
@@ -32,3 +32,15 @@ wallets:
 
 # enable output of development artifacts to load with react
 dev_deployment_artifacts: true
+
+compiler:
+  solc:
+    version: 0.8.2
+    remappings:
+      - "@openzeppelin-upgradeable=OpenZeppelin/openzeppelin-contracts-upgradeable@4.0.0"
+      - "@openzeppelin=OpenZeppelin/openzeppelin-contracts@4.0.0"
+
+dependencies:
+  - OpenZeppelin/openzeppelin-contracts@4.0.0
+  - OpenZeppelin/openzeppelin-contracts-upgradeable@4.0.0
+
