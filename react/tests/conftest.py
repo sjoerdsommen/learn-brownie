@@ -1,5 +1,7 @@
 import pytest
 
+from brownie import accounts, MyToken
+
 
 @pytest.fixture(autouse=True)
 def setup(fn_isolation):
@@ -9,18 +11,6 @@ def setup(fn_isolation):
     """
     pass
 
-
 @pytest.fixture(scope="module")
-def vyper_storage(accounts, VyperStorage):
-    """
-    Yield a `Contract` object for the VyperStorage contract.
-    """
-    yield accounts[0].deploy(VyperStorage)
-
-
-@pytest.fixture(scope="module")
-def solidity_storage(accounts, SolidityStorage):
-    """
-    Yield a `Contract` object for the SolidityStorage contract.
-    """
-    yield accounts[0].deploy(SolidityStorage)
+def token():
+    return MyToken.deploy(1000, {'from':accounts[0]})
