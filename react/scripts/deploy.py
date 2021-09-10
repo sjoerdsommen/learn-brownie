@@ -8,8 +8,10 @@ def main():
     if network.show_active()=='development':
         # add these accounts to metamask by importing private key
         owner = accounts[0]
-        token_address = MyToken.deploy(dotenv_values()["INITIAL_TOKENS"], {'from':accounts[0]})
-        token_sale_address = MyTokenSale.deploy(1, accounts[0], token_address, {'from':accounts[0]})
-        token_address.transfer(token_sale_address, token_address.totalSupply(), {'from':accounts[0]})
+        token = MyToken.deploy(dotenv_values()["INITIAL_TOKENS"], {'from':accounts[0]})
+        token_sale = MyTokenSale.deploy(1, accounts[0], token, {'from':accounts[0]})
+        token.transfer(token_sale, token.totalSupply(), {'from':accounts[0]})
+
+        return token, token_sale
 
         
