@@ -16,7 +16,6 @@ class App extends Component {
       this.accounts = await this.web3.eth.getAccounts();
 
       // Get the contract instance.
-      this.networkId = await this.web3.eth.net.getId();
       const chainid = parseInt(await this.web3.eth.getChainId());
 
         // <=42 to exclude Kovan, <42 to include kovan
@@ -34,11 +33,18 @@ class App extends Component {
           _chainID = "dev"
       }
 
-      this.tokenInstance = await this.loadContract(_chainID,"MyToken")
-      this.tokenSaleInstance = await this.loadContract(_chainID,"MyTokenSale")
-      this.kycInstance = await this.loadContract(_chainID,"KycContract")
+      // load contracts
+      const tokenArtifact = await import(`./artifacts/deployments/${_chainID}/${map[_chainID]["MyToken"][0]}.json`)
+      this.tokenInstance = new this.web3.eth.Contract(tokenArtifact.abi, map[_chainID]["MyToken"][0])
+
+      const tokenSaleArtifact = await import(`./artifacts/deployments/${_chainID}/${map[_chainID]["MyTokenSale"][0]}.json`)
+      this.tokenSaleInstance = new this.web3.eth.Contract(tokenSaleArtifact.abi, map[_chainID]["MyTokenSale"][0])
+
+      const KycContractArtifact = await import(`./artifacts/deployments/${_chainID}/${map[_chainID]["KycContract"][0]}.json`)
+      this.KycContractInstance = new this.web3.eth.Contract(KycContractArtifact.abi, map[_chainID]["KycContract"][0])
       
       this.setState({loaded:true, tokenSaleAddress:map[_chainID]["MyTokenSale"][0]}, this.updateUserTokens);
+      
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -47,31 +53,6 @@ class App extends Component {
       console.error(error);
     }
   };
-
-  loadContract = async (chain, contractName) => {
-      // Load a deployed contract instance into a web3 contract object
-      const {web3} = this.state
-
-      // Get the address of the most recent deployment from the deployment map
-      let address
-      try {
-          address = map[chain][contractName][0]
-      } catch (e) {
-          console.log(`Couldn't find any deployed contract "${contractName}" on the chain "${chain}".`)
-          return undefined
-      }
-
-      // Load the artifact with the specified address
-      let contractArtifact
-      try {
-          contractArtifact = await import(`./artifacts/deployments/${chain}/${address}.json`)
-      } catch (e) {
-          console.log(`Failed to load contract artifact "./artifacts/deployments/${chain}/${address}.json"`)
-          return undefined
-      }
-
-      return new web3.eth.Contract(contractArtifact.abi, address)
-  }
 
   updateUserTokens = async () => {
     let userTokens = await this.tokenInstance.methods.balanceOf(this.accounts[0]).call();
@@ -96,7 +77,7 @@ class App extends Component {
   }
 
   handleKycWhitelisting = async () => {
-    await this.kycInstance.methods.setKycCompleted(this.state.kycAddress).send({from: this.accounts[0]});
+    await this.KycContractInstance.methods.setKycCompleted(this.state.kycAddress).send({from: this.accounts[0]});
     alert("KYC for "+this.state.kycAddress+" is completed");
   }
 
