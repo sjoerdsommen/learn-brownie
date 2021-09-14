@@ -12,7 +12,7 @@ networks:
   default: development
   development:
     cmd_settings:
-      mnemonic: between pilot arrest friend profit agree auction grass giant love ensure require
+      mnemonic: bla
       default_balance: 100
       # unlock: <ACCOUNT ADDRESS HERE> # optionally add saved brownie account to Ganache
       # # (requires explicit transfer of eth to accounts[-1]) 
