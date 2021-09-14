@@ -9,7 +9,6 @@ dotenv: .env
 
 
 networks:
-  default: development
   development:
     cmd_settings:
       mnemonic: bla
@@ -19,9 +18,7 @@ networks:
 
     update_interval: 60
     verify: False
-  
   kovan:
-
     verify: False
     update_interval: 60
 
