@@ -9,19 +9,16 @@ dotenv: .env
 
 
 networks:
-  default: development
   development:
     cmd_settings:
-      mnemonic: between pilot arrest friend profit agree auction grass giant love ensure require
+      mnemonic: bla
       default_balance: 100
       # unlock: <ACCOUNT ADDRESS HERE> # optionally add saved brownie account to Ganache
       # # (requires explicit transfer of eth to accounts[-1]) 
 
     update_interval: 60
     verify: False
-  
   kovan:
-
     verify: False
     update_interval: 60
 
@@ -39,3 +36,6 @@ compiler:
     remappings:
       - "@openzeppelin-upgradeable=OpenZeppelin/openzeppelin-contracts-upgradeable@4.0.0"
       - "@openzeppelin=OpenZeppelin/openzeppelin-contracts@4.0.0"
+dependencies:
+  - OpenZeppelin/openzeppelin-contracts@4.0.0
+  - OpenZeppelin/openzeppelin-contracts-upgradeable@4.0.0

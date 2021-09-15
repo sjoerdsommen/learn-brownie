@@ -1,5 +1,9 @@
 import pytest
 
+from dotenv import dotenv_values
+
+from brownie import run
+
 
 @pytest.fixture(autouse=True)
 def setup(fn_isolation):
@@ -9,18 +13,17 @@ def setup(fn_isolation):
     """
     pass
 
+@pytest.fixture(scope="module")
+def deployment():
+    return run('deploy')
 
 @pytest.fixture(scope="module")
-def vyper_storage(accounts, VyperStorage):
-    """
-    Yield a `Contract` object for the VyperStorage contract.
-    """
-    yield accounts[0].deploy(VyperStorage)
-
+def token(accounts, MyToken):
+    token = MyToken.deploy(dotenv_values()["INITIAL_TOKENS"], {'from':accounts[0]})
+    return token
 
 @pytest.fixture(scope="module")
-def solidity_storage(accounts, SolidityStorage):
-    """
-    Yield a `Contract` object for the SolidityStorage contract.
-    """
-    yield accounts[0].deploy(SolidityStorage)
+def token_sale(token, accounts, MyTokenSale):
+    token_sale = MyTokenSale.deploy(1, accounts[0], token, {'from':accounts[0]})
+    token.transfer(token_sale, token.totalSupply(), {'from':accounts[0]})
+    return token_sale
